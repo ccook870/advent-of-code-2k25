@@ -1,0 +1,25 @@
+with open("commands.txt") as f:
+    commands = [line.strip() for line in f if line.strip()]
+def count_zero_stops(commands, dial_size=100):
+    position = 50  # start at 50
+    zero_count = 0  # doesn't start at 0
+    
+    for cmd in commands:
+        direction = cmd[0]   # 'R' or 'L'
+        steps = int(cmd[1:]) # number after R/L
+        
+        if direction == 'R':
+            position = (position + steps) % dial_size
+        elif direction == 'L':
+            position = (position - steps) % dial_size
+        
+        if position == 0:
+            zero_count += 1
+    
+    return zero_count
+
+zero_count = count_zero_stops(commands, dial_size=100)
+print("Number of times stopped at 0:", zero_count)
+
+##I figured Day 1, Part 1 was going to be pretty simple. I wanted to figure out a way to scrape directly from the webpage but I'm not good at that yet! so I used a .txt for my array.
+##But anyways, python's good for simple math stuff. trick here was learning how to do the dial_size math when it wrapped past, but once I got that, I was rolling. Woohoo!
