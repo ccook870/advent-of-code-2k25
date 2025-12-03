@@ -21,5 +21,28 @@ def count_zero_stops(commands, dial_size=100):
 zero_count = count_zero_stops(commands, dial_size=100)
 print("Number of times stopped at 0:", zero_count)
 
-##I figured Day 1, Part 1 was going to be pretty simple. I wanted to figure out a way to scrape directly from the webpage but I'm not good at that yet! so I used a .txt for my array.
+##part 2 where it counts all crossings of 0
+def count_zero_crossings(commands, dial_size=100):
+    position = 50
+    zero_count = 0  # starts at 0
+    
+    for cmd in commands:
+        direction = cmd[0]
+        steps = int(cmd[1:])
+        
+        for _ in range(steps):
+            if direction == 'R':
+                position = (position + 1) % dial_size
+            elif direction == 'L':
+                position = (position - 1) % dial_size
+            
+            if position == 0:
+                zero_count += 1
+    
+    return zero_count
+
+zero_count = count_zero_crossings(commands, dial_size=100)
+print("Number of times dial pointed at 0:", zero_count)
+
+##I figured Day 1 was going to be pretty simple. I wanted to figure out a way to scrape directly from the webpage but I'm not good at that yet! so I used a .txt for my array.
 ##But anyways, python's good for simple math stuff. trick here was learning how to do the dial_size math when it wrapped past, but once I got that, I was rolling. Woohoo!
