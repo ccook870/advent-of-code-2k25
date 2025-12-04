@@ -1,0 +1,55 @@
+#day 2 part 1 asked me to find a set of invalid IDs when the string of the integer is a doubled string, e.g., 123123, 66, 8888, and when the string is within a set of given ranges of numbers.
+#and hey, low-level data transformation like this is my literal job, so let's get cracking.
+
+#now I'm positive there's far more efficient ways to do this, but the right answer is the right answer, and that's what I care about for now.
+#so after some consideration, my thought was to look at my ranges, find the longest possible string and build a dataframe off of that. our biggest number in any range was 9494978970.
+
+#step 1, build a dataframe that contains the first half of every possible string. this was definitely too expansive, it would've been faster to set the ranges first and go from there. alas!
+
+import pandas as pd
+
+# Create the initial DataFrame
+df = pd.DataFrame({"NUMBER": range(1, 94950)})
+
+#then we add a column with the doubled string
+
+# Add the KEY column by doubling the string of NUMBER
+df["KEY"] = df["NUMBER"].astype(str) * 2
+
+#which gets us
+
+	NUMBER	KEY
+0	1	      11
+1	2	      22
+2	3	      33
+3	4	      44
+4	5	      55
+
+#now we build a simple function to look for any KEY value in a given range. first attempt didn't work because the top end overflowed the numerical limit
+
+def get_keys_in_ranges(df, ranges):
+    results = []
+    for start, end in ranges:
+        filtered = df[df["KEY"].apply(int).between(start, end)]
+        results.extend(filtered["KEY"].tolist())
+    return results
+
+#then the ranges
+def parse_ranges(range_string):
+    ranges = []
+    for part in range_string.split(","):
+        start, end = part.split("-")
+        ranges.append((int(start), int(end)))
+    return ranges
+
+range_string = "1-14,46452718-46482242,16-35,92506028-92574540,1515128146-1515174322,56453-79759,74-94,798-971,49-66,601-752,3428-4981,511505-565011,421819-510058,877942-901121,39978-50500,9494916094-9494978970,7432846301-7432888696,204-252,908772-990423,21425-25165,1030-1285,7685-9644,419-568,474396757-474518094,5252506279-5252546898,4399342-4505058,311262290-311393585,1895-2772,110695-150992,567521-773338,277531-375437,284-364,217936-270837,3365257-3426031,29828-36350"
+ranges = parse_ranges(range_string)
+
+#and pull it all together because what you have to do is sum your "invalid" key hits
+
+keys = get_keys_in_ranges(df, ranges)
+total_sum = sum(int(k) for k in keys)
+
+print("Total sum of KEY values:", total_sum)
+
+#wish I had a more efficient method, but I'm proud of myself for coming up with a solution.
