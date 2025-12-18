@@ -1,0 +1,33 @@
+#day 3 is the easiest yet. we just need to find the largest n digit number possible from a numeric string, without rearranging the numbers.
+#for instance, if we wanted the largest 2 digit number in 81912, the number isn't 91 or 98, it's 92.
+#as with day 2, the best solution came when I have to solve part 2, so we'll just lay that out here.
+
+def largest_12_digit(s: str) -> int:
+    n = 12
+    best = [-1] * (n + 1)
+
+    for ch in reversed(s):
+        d = int(ch)
+        for k in range(n, 0, -1):
+            if k == 1:
+                best[1] = max(best[1], d)
+            else:
+                if best[k-1] != -1:
+                    candidate = d * (10 ** (k - 1)) + best[k-1]
+                    best[k] = max(best[k], candidate)
+
+    return best[n]
+
+
+values = []
+
+with open("index.txt") as f:
+    for line in f:
+        s = line.strip()
+        if not s:
+            continue
+        value = largest_12_digit(s)
+        values.append(value)
+
+total = sum(values)
+print("Sum:", total)
