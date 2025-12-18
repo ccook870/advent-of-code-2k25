@@ -53,3 +53,30 @@ total_sum = sum(int(k) for k in keys)
 print("Total sum of KEY values:", total_sum)
 
 #wish I had a more efficient method, but I'm proud of myself for coming up with a solution.
+
+
+
+
+#part 2, but also part 1
+
+#I toiled on trying to make the above code work with the structure of part 2, which asks for every number that has any number of doubled strings, so now "111" or "5454545454" would be hits too.
+#I think this would've eventually worked, but it was very slow because I wasn't getting at it the right way
+#so I thought, maybe a regex would work
+#I am not very good at regexes, so I had to get some help on forums, but I got a working solution in the end:
+
+from re import findall
+
+a = b = 0
+for lo, hi in findall(r'(\d+)-(\d+)', *open('index.txt')):
+    for i in range(int(lo), int(hi)+1):
+        if findall(r'^(\d+)\1$',  str(i)): a += i
+        if findall(r'^(\d+)\1+$', str(i)): b += i
+
+print(a, b)
+
+#findall is a handy package for regexes (didn't know about it before) that can identify patterns of strings and find copies. that's useful!!
+#so what we're doing here is setting our variables to 0, importing the index file, and then doing our matching
+# we want to match the start of the string ^, followed by a group of one or more digits (\d+), followed by that same group \1, followed by the end of the string $.
+#For part 2, we match on ^(\d+)\1+$: mostly the same, but instead of matching \1 exactly once, we'll match it one or more times using \1+.
+
+#it works! onto day 3 with new knowledge of using regexes.
